@@ -22,7 +22,7 @@ Ancak çalışma süresi ile başarı arasındaki ilişki doğrusal değildir:
 - Yetersiz çalışma başarının düşmesine neden olurken,
 - Aşırı çalışma belirli bir noktadan sonra verim kaybına yol açabilmektedir.
 - Ayrıca bazı dersler için minimum çalışma süresi gibi
-akademik ve pedagojik gereklilikler bulunmaktadır.
+akademik gereklilikler bulunmaktadır.
 
 Bu nedenle problem, yalnızca başarıyı artırmayı değil,
 aynı zamanda *gerçekçi ve uygulanabilir çalışma kısıtlarını*
@@ -41,8 +41,8 @@ y = 4x_1 + 5x_2 - 0.5x_1^2 - 0.2x_2^2
 \]
 
 Burada:
-- *x₁:* Matematik dersi için ayrılan haftalık etüt süresi (saat)
-- *x₂:* Fen dersi için ayrılan haftalık etüt süresi (saat)
+- *x₁:* Matematik dersi için ayrılan etüt süresi (saat)
+- *x₂:* Fen dersi için ayrılan etüt süresi (saat)
 
 Fonksiyondaki doğrusal terimler,
 çalışma süresinin başarı üzerindeki olumlu etkisini temsil ederken;
@@ -64,7 +64,7 @@ Optimizasyon probleminde kullanılan kısıtlar aşağıda özetlenmiştir:
 | x₂ ≥ 2 | Fen dersi için minimum süre |
 
 Bu kısıtlar, Genetik Algoritma sürecinde
-*ceza (penalty) yöntemi* kullanılarak fitness fonksiyonuna entegre edilmiştir.
+*ceza yöntemi* kullanılarak fitness fonksiyonuna entegre edilmiştir.
 
 ---
 
@@ -90,7 +90,7 @@ başlangıç aşamasında keşfedilmesini sağlar.
 
 ---
 
-### 3.2 Uygunluk (Fitness) Hesaplaması
+### 3.2 Fitness Hesaplaması
 
 Her birey için:
 1. Amaç fonksiyonu değeri hesaplanır.
@@ -112,7 +112,7 @@ popülasyon çeşitliliği korunmuştur.
 
 ---
 
-### 3.4 Çaprazlama (Crossover)
+### 3.4 Çaprazlama 
 
 Yeni bireylerin üretilmesi amacıyla
 *tek noktalı çaprazlama* yöntemi uygulanmıştır.
@@ -121,7 +121,7 @@ yeni çözüm adayları oluşturulmuştur.
 
 ---
 
-### 3.5 Mutasyon (Mutation)
+### 3.5 Mutasyon 
 
 Mutasyon işlemi, genetik çeşitliliği artırmak ve
 algoritmanın yerel optimumlara erken sıkışmasını önlemek amacıyla kullanılmıştır.
@@ -158,7 +158,7 @@ Fitness eğrisinin belirli bir noktadan sonra yataylaşması,
 
 ## 5. Çalıştırma ve Kullanım
 
-Proje tek bir Jupyter Notebook (.ipynb) dosyasından oluşmaktadır.
+Proje tek bir Google Colab (.ipynb) dosyasından oluşmaktadır.
 
 ### Gerekli Kütüphaneler
 - numpy
