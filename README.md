@@ -1,19 +1,19 @@
-# Genetik Algoritma ile Öğrenci Etüt Programı Optimizasyonu (Senaryo 9)
+# Genetik Algoritma ile Öğrenci Etüt Programı Optimizasyonu
 
 Bu proje, BLG-307 Yapay Zeka Sistemleri dersi kapsamında,
-bir öğrencinin matematik (x₁) ve fen (x₂) derslerine ayırdığı haftalık etüt sürelerini,
+bir öğrencinin matematik (x₁) ve fen (x₂) derslerine ayırdığı etüt sürelerini,
 sınav başarısını maksimize edecek şekilde planlamayı amaçlamaktadır.
 
 Problem, hem doğrusal olmayan bir amaç fonksiyonu
 hem de birden fazla kısıt içerdiği için
-*kısıtlı bir optimizasyon problemi* olarak ele alınmış
-ve çözüm sürecinde *Genetik Algoritma (GA)* yöntemi kullanılmıştır.
+kısıtlı bir optimizasyon problemi olarak ele alınmış
+ve çözüm sürecinde *Genetik Algoritma* yöntemi kullanılmıştır.
 
 ---
 
 ## 1. Problem Tanımı
 
-Öğrencilerin haftalık çalışma süreleri sınırlıdır ve bu süre,
+Öğrencilerin çalışma süreleri sınırlıdır ve bu süre,
 farklı dersler arasında dengeli bir biçimde paylaştırılmalıdır.
 Matematik ve fen derslerine ayrılan süreler,
 öğrencinin akademik başarısını doğrudan etkilemektedir.
@@ -25,7 +25,7 @@ Ancak çalışma süresi ile başarı arasındaki ilişki doğrusal değildir:
 akademik gereklilikler bulunmaktadır.
 
 Bu nedenle problem, yalnızca başarıyı artırmayı değil,
-aynı zamanda *gerçekçi ve uygulanabilir çalışma kısıtlarını*
+aynı zamanda gerçekçi ve uygulanabilir çalışma kısıtlarını
 dikkate alan bir optimizasyon problemi hâline gelmektedir.
 
 ---
@@ -60,21 +60,20 @@ Optimizasyon probleminde kullanılan kısıtlar aşağıda özetlenmiştir:
 |-----|----------|
 | 0 ≤ x₁ ≤ 10 | Matematik etüt süresi sınırları |
 | 0 ≤ x₂ ≤ 10 | Fen etüt süresi sınırları |
-| x₁ + x₂ ≤ 12 | Toplam haftalık etüt süresi |
+| x₁ + x₂ ≤ 12 | Toplam etüt süresi |
 | x₂ ≥ 2 | Fen dersi için minimum süre |
 
 Bu kısıtlar, Genetik Algoritma sürecinde
-*ceza yöntemi* kullanılarak fitness fonksiyonuna entegre edilmiştir.
+ceza yöntemi kullanılarak fitness fonksiyonuna entegre edilmiştir.
 
 ---
 
 ## 3. Kullanılan Yöntem: Genetik Algoritma
 
 Bu çalışmada çözüm yöntemi olarak
-biyolojik evrim süreçlerinden esinlenen
-*Genetik Algoritma (GA)* tercih edilmiştir.
+Genetik Algoritma tercih edilmiştir.
 
-GA, rastgelelik ve seçilim temelli yapısı sayesinde
+Genetik Algoritma, rastgelelik ve seçilim temelli yapısı sayesinde
 karmaşık ve doğrusal olmayan problemlerin çözümünde
 etkili sonuçlar üretebilmektedir.
 
@@ -105,7 +104,7 @@ daha avantajlı hâle gelmektedir.
 
 ### 3.3 Seçilim: Rulet Tekerleği Yöntemi
 
-Ebeveyn seçimi için *rulet tekerleği seçimi* kullanılmıştır.
+Ebeveyn seçimi için rulet tekerleği seçimi kullanılmıştır.
 Bu yöntemde fitness değeri yüksek bireylerin seçilme olasılığı artarken,
 düşük fitnesslı bireylerin de küçük bir ihtimalle seçilmesi sağlanarak
 popülasyon çeşitliliği korunmuştur.
@@ -115,7 +114,7 @@ popülasyon çeşitliliği korunmuştur.
 ### 3.4 Çaprazlama 
 
 Yeni bireylerin üretilmesi amacıyla
-*tek noktalı çaprazlama* yöntemi uygulanmıştır.
+tek noktalı çaprazlama yöntemi uygulanmıştır.
 İki ebeveyn bireyin genetik bilgileri farklı kombinasyonlarla birleştirilerek
 yeni çözüm adayları oluşturulmuştur.
 
@@ -162,10 +161,11 @@ Proje tek bir Google Colab (.ipynb) dosyasından oluşmaktadır.
 
 ### Gerekli Kütüphaneler
 - numpy
+- random
 - matplotlib
 
 Notebook dosyası,
-Google Colab veya Jupyter Notebook ortamında
+Google Colab ortamında
 hücreler sırasıyla çalıştırılarak kullanılabilir.
 
 ---
