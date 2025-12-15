@@ -1,101 +1,178 @@
-# 📚 Öğrenci Etüt Programı Optimizasyonu: Genetik Algoritma (GA)
+# Genetik Algoritma ile Öğrenci Etüt Programı Optimizasyonu (Senaryo 9)
 
-Bu proje, bir öğrencinin **matematik (x₁) ve fen (x₂) etüt sürelerini** en verimli şekilde planlayarak **başarı skorunu maksimize etmeyi** amaçlamaktadır. Problem, **Genetik Algoritma (GA)** kullanılarak çözülmüş bir **kısıtlı optimizasyon problemi** olarak ele alınmıştır.
+Bu proje, BLG-307 Yapay Zeka Sistemleri dersi kapsamında,
+bir öğrencinin matematik (x₁) ve fen (x₂) derslerine ayırdığı haftalık etüt sürelerini,
+sınav başarısını maksimize edecek şekilde planlamayı amaçlamaktadır.
+
+Problem, hem doğrusal olmayan bir amaç fonksiyonu
+hem de birden fazla kısıt içerdiği için
+*kısıtlı bir optimizasyon problemi* olarak ele alınmış
+ve çözüm sürecinde *Genetik Algoritma (GA)* yöntemi kullanılmıştır.
 
 ---
 
-## 1. 📝 Problem Tanımı ve Matematiksel Model
+## 1. Problem Tanımı
 
-Amaç, öğrencinin haftalık etüt sürelerini temsil eden karar değişkenlerini kullanarak başarı skorunu en üst düzeye çıkarmaktır.
+Öğrencilerin haftalık çalışma süreleri sınırlıdır ve bu süre,
+farklı dersler arasında dengeli bir biçimde paylaştırılmalıdır.
+Matematik ve fen derslerine ayrılan süreler,
+öğrencinin akademik başarısını doğrudan etkilemektedir.
 
-### Amaç Fonksiyonu (Maksimizasyon)
+Ancak çalışma süresi ile başarı arasındaki ilişki doğrusal değildir:
+- Yetersiz çalışma başarının düşmesine neden olurken,
+- Aşırı çalışma belirli bir noktadan sonra verim kaybına yol açabilmektedir.
+- Ayrıca bazı dersler için minimum çalışma süresi gibi
+akademik ve pedagojik gereklilikler bulunmaktadır.
 
-Başarı skorunu hesaplamak için kullanılan fonksiyon:
+Bu nedenle problem, yalnızca başarıyı artırmayı değil,
+aynı zamanda *gerçekçi ve uygulanabilir çalışma kısıtlarını*
+dikkate alan bir optimizasyon problemi hâline gelmektedir.
+
+---
+
+## 2. Matematiksel Model
+
+### 2.1 Amaç Fonksiyonu
+
+Öğrencinin başarı skorunu temsil eden amaç fonksiyonu aşağıdaki şekilde tanımlanmıştır:
 
 \[
 y = 4x_1 + 5x_2 - 0.5x_1^2 - 0.2x_2^2
 \]
 
-- **x₁:** Matematik etüt süresi (saat)  
-- **x₂:** Fen etüt süresi (saat)
+Burada:
+- *x₁:* Matematik dersi için ayrılan haftalık etüt süresi (saat)
+- *x₂:* Fen dersi için ayrılan haftalık etüt süresi (saat)
 
-Doğrusal terimler etüt sürelerinin başarıya katkısını, karesel terimler ise aşırı çalışmanın verimi düşürücü etkisini modellemektedir.
-
----
-
-### Kısıtlamalar
-
-Değişkenler hem fiziksel sınırlar hem de problem tanımına özgü kısıtlarla sınırlandırılmıştır:
-
-| Kısıt Tipi | Değişken | Aralık / Kural |
-| :--- | :--- | :--- |
-| **Fiziksel Aralık** | x₁ (Matematik) | \( 0 \leq x_1 \leq 10 \) |
-| **Fiziksel Aralık** | x₂ (Fen) | \( 0 \leq x_2 \leq 10 \) |
-| **Problem Kısıtı** | x₁ + x₂ | \( x_1 + x_2 \leq 12 \) |
-| **Problem Kısıtı** | x₂ | \( x_2 \geq 2 \) |
-
-Kısıt ihlalleri, genetik algoritma içerisinde **ceza (penalty) yöntemi** kullanılarak ele alınmıştır.
+Fonksiyondaki doğrusal terimler,
+çalışma süresinin başarı üzerindeki olumlu etkisini temsil ederken;
+ikinci dereceden terimler,
+aşırı çalışmanın verimi düşürücü etkisini modele dahil etmektedir.
+Bu sayede daha dengeli ve gerçekçi çözümler tercih edilmektedir.
 
 ---
 
-## 2. ⚙️ Genetik Algoritma (GA) Yapısı
+### 2.2 Değişken Aralıkları ve Kısıtlar
 
-Optimizasyon probleminin çözümü için kullanılan Genetik Algoritma’nın temel parametreleri ve mekanizmaları aşağıda sunulmuştur.
+Optimizasyon probleminde kullanılan kısıtlar aşağıda özetlenmiştir:
 
-### GA Parametreleri
+| Kısıt | Açıklama |
+|-----|----------|
+| 0 ≤ x₁ ≤ 10 | Matematik etüt süresi sınırları |
+| 0 ≤ x₂ ≤ 10 | Fen etüt süresi sınırları |
+| x₁ + x₂ ≤ 12 | Toplam haftalık etüt süresi |
+| x₂ ≥ 2 | Fen dersi için minimum süre |
 
-| Parametre | Değer | Açıklama |
-| :--- | :--- | :--- |
-| Popülasyon Büyüklüğü (`POPULASYON_BOYUTU`) | 30 | Her nesildeki birey sayısı |
-| Nesil Sayısı (`NESIL_SAYISI`) | 50 | Algoritmanın çalışacağı toplam nesil sayısı |
-| Mutasyon Oranı (`MUTASYON_ORANI`) | 0.2 | Genlerin mutasyona uğrama olasılığı |
-| Mutasyon Büyüklüğü | 1.0 | Mutasyon sırasında eklenecek rastgele değişim miktarı |
-
----
-
-### GA Operatörleri ve Stratejileri
-
-- **Başlangıç Popülasyonu:** x₁ ve x₂ değişkenleri, tanımlanan sınırlar içerisinde **rastgele** oluşturulmuştur.
-- **Seçilim (Selection):** Ebeveyn seçimi için **Rulet Tekerleği Seçimi** yöntemi kullanılmıştır.
-- **Çaprazlama (Crossover):** **Tek Noktalı Çaprazlama** uygulanarak ebeveynlerin genleri birleştirilmiştir.
-- **Mutasyon (Mutation):** Belirlenen olasılık ile genlere küçük rastgele değişimler uygulanmış ve sınır kontrolleri yapılmıştır.
-- **Kısıt Yönetimi (Ceza Fonksiyonu):** Kısıt ihlali yapan bireylerin fitness değeri düşürülerek seçilme olasılıkları azaltılmıştır.
-- **Elitizm:** Her neslin en iyi bireyi doğrudan bir sonraki nesle aktarılmıştır.
+Bu kısıtlar, Genetik Algoritma sürecinde
+*ceza (penalty) yöntemi* kullanılarak fitness fonksiyonuna entegre edilmiştir.
 
 ---
 
-## 3. 📈 Görselleştirme ve Analiz
+## 3. Kullanılan Yöntem: Genetik Algoritma
 
-Algoritmanın performansını değerlendirmek amacıyla:
+Bu çalışmada çözüm yöntemi olarak
+biyolojik evrim süreçlerinden esinlenen
+*Genetik Algoritma (GA)* tercih edilmiştir.
 
-- Nesillere göre **en iyi x₁ ve x₂ değerlerinin değişimi**
-- Nesillere göre **en iyi fitness değerinin değişimi**
-
-grafikler aracılığıyla görselleştirilmiştir. Bu sayede algoritmanın yakınsama davranışı ve çözümün kararlılığı analiz edilmiştir.
-
----
-
-## 4. ✅ Sonuçlar
-
-Genetik algoritma sonucunda:
-
-- Başarı skorunun nesiller boyunca arttığı,
-- Belirli bir noktadan sonra kararlı bir çözüme ulaşıldığı,
-- Elde edilen en iyi çözümün tüm kısıtları sağladığı
-
-gözlemlenmiştir.
-
-Bu çalışma, genetik algoritmaların **kısıtlı optimizasyon problemlerinde etkili ve uygulanabilir** bir yöntem olduğunu göstermektedir.
+GA, rastgelelik ve seçilim temelli yapısı sayesinde
+karmaşık ve doğrusal olmayan problemlerin çözümünde
+etkili sonuçlar üretebilmektedir.
 
 ---
 
-## 5. 🚀 Çalıştırma ve Kurulum
+### 3.1 Başlangıç Popülasyonu
 
-Proje tek bir Jupyter Notebook dosyası (`burak.ipynb`) üzerinden çalıştırılmaktadır.
+Başlangıç popülasyonu, her biri iki genli (x₁, x₂) bireylerden oluşacak şekilde,
+önceden tanımlanan değişken aralıkları içinde
+rastgele üretilmiştir.
+Bu yaklaşım, çözüm uzayının farklı bölgelerinin
+başlangıç aşamasında keşfedilmesini sağlar.
+
+---
+
+### 3.2 Uygunluk (Fitness) Hesaplaması
+
+Her birey için:
+1. Amaç fonksiyonu değeri hesaplanır.
+2. Kısıt ihlalleri ceza fonksiyonu ile belirlenir.
+3. Nihai fitness değeri, amaç fonksiyonundan cezanın çıkarılmasıyla elde edilir.
+
+Bu yapı sayesinde hem yüksek başarı üreten
+hem de kısıtlara uygun çözümler
+daha avantajlı hâle gelmektedir.
+
+---
+
+### 3.3 Seçilim: Rulet Tekerleği Yöntemi
+
+Ebeveyn seçimi için *rulet tekerleği seçimi* kullanılmıştır.
+Bu yöntemde fitness değeri yüksek bireylerin seçilme olasılığı artarken,
+düşük fitnesslı bireylerin de küçük bir ihtimalle seçilmesi sağlanarak
+popülasyon çeşitliliği korunmuştur.
+
+---
+
+### 3.4 Çaprazlama (Crossover)
+
+Yeni bireylerin üretilmesi amacıyla
+*tek noktalı çaprazlama* yöntemi uygulanmıştır.
+İki ebeveyn bireyin genetik bilgileri farklı kombinasyonlarla birleştirilerek
+yeni çözüm adayları oluşturulmuştur.
+
+---
+
+### 3.5 Mutasyon (Mutation)
+
+Mutasyon işlemi, genetik çeşitliliği artırmak ve
+algoritmanın yerel optimumlara erken sıkışmasını önlemek amacıyla kullanılmıştır.
+Belirli bir olasılıkla gen değerlerine küçük rastgele değişiklikler eklenmiş
+ve mutasyon sonrası değerlerin tanımlı sınırlar içinde kalması sağlanmıştır.
+
+---
+
+### 3.6 Elitizm
+
+Her nesilde en yüksek fitness değerine sahip birey,
+bilgi kaybını önlemek amacıyla
+doğrudan bir sonraki nesle aktarılmıştır.
+Bu yaklaşım, algoritmanın kararlılığını artırmaktadır.
+
+---
+
+## 4. Deneysel Sonuçlar ve Analiz
+
+Genetik Algoritma çalıştırıldığında,
+nesiller ilerledikçe en iyi fitness değerinin arttığı
+ve algoritmanın kısıtları sağlayan
+kararlı bir çözüme yakınsadığı gözlemlenmiştir.
+
+Algoritmanın davranışı;
+- En iyi x₁ ve x₂ değerlerinin nesillere göre değişimi,
+- En iyi fitness değerinin zaman içindeki gelişimi
+
+grafikler aracılığıyla analiz edilmiştir.
+Fitness eğrisinin belirli bir noktadan sonra yataylaşması,
+çözümün kararlı hâle geldiğini göstermektedir.
+
+---
+
+## 5. Çalıştırma ve Kullanım
+
+Proje tek bir Jupyter Notebook (.ipynb) dosyasından oluşmaktadır.
 
 ### Gerekli Kütüphaneler
+- numpy
+- matplotlib
 
-Aşağıdaki kütüphanelerin yüklü olması gerekmektedir:
+Notebook dosyası,
+Google Colab veya Jupyter Notebook ortamında
+hücreler sırasıyla çalıştırılarak kullanılabilir.
 
-```bash
-pip install numpy matplotlib
+---
+
+## 6. Proje Bilgileri
+
+- *Ders:* BLG-307 Yapay Zeka Sistemleri  
+- *Senaryo:* 9  
+- *Konu:* Genetik Algoritma ile Öğrenci Etüt Programı Optimizasyonu  
+- *Hazırlayan:* Burak Duran
